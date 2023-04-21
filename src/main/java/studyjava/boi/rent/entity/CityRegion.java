@@ -18,6 +18,5 @@ public class CityRegion {
     @Column (name = "region_name", nullable = false, length = 20, unique = true)
     private String regionName;
 
-    public CityRegion() {
-    }
+
 }

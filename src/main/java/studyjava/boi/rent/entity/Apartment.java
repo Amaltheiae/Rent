@@ -1,15 +1,15 @@
 package studyjava.boi.rent.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Table(name = "apartment")
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Apartment {
 
     @Id
@@ -20,9 +20,12 @@ public class Apartment {
     @Column(name = "type", nullable = false)
     TypeApartments type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "adress_id")
     Adress adress;
+
+    @Column(name = "floor_number", nullable = false)
+    private int floorNumber;
 
     private double price;
 
@@ -31,6 +34,5 @@ public class Apartment {
 
     private String comment;
 
-    public Apartment() {
-    }
+
 }
