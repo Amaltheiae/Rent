@@ -19,4 +19,16 @@ public class AdressServiceImpl implements AdressService {
     public List<Adress> getAllAdress() {
         return adressRepository.findAll();
     }
+
+    @Override
+    public Adress saveAdress(Adress adress) {
+        return adressRepository.save(adress);
+    }
+
+    @Override
+    public Adress findAdress(Adress adress) {
+        return adressRepository.findAdressByStreetAndBuildingNumber(adress.getStreet(),
+                adress.getBuildingNumber());
+    }
+
 }

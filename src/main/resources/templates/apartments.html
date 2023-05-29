@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Rent System</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+    <style type="text/css" class="init">
+
+        thead input {
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+    <!-- Brand -->
+    <a class="navbar-brand" href="#">Rent System</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/logout}">Logout</a>
+            </li>
+        </ul>
+    </div>
+    <div sec:authorize="hasAnyAuthority('ROLE_ADMIN')" class="collapse navbar-collapse" id="navbarSupportedContent2">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/users}">Users</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <h1> Apartment List Spring </h1>
+    </div>
+
+    <div class="row" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
+        <div class="col-lg-3">
+            <a th:href="@{/apartments/new}" class="btn btn-primary btn-sm mb-3"> Add Apartment</a>
+        </div>
+
+    </div>
+    <div class="row">
+        <table>
+            <tbody>
+            <tr>
+                <td style="width: 75px">
+                </td>
+                <td style="width: 250px">
+                    <label for-id="search-text">Почніть вводити назву вулиці</label>
+                    <input class="header-input" type="text" id="search-text"
+                           onkeyup="tableSearch()">
+                </td>
+                <td style="width: 75px">
+                </td>
+                <td style="width: 75px">
+                </td>
+                <td style="width: 75px">
+                </td>
+                <td style="width: 75px">
+                    <label for-id="search-text-room">Скільки кімнат?</label>
+                    <input class="header-input" type="text" id="search-text-room"
+                              onkeyup="tableSearchRooms()">
+                </td>
+
+            </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+    <table id="apartments" class="display dataTable" style="width:100%;" aria-describedby="List of apartments to rent">
+        <thead class="table-dark">
+        <tr>
+            <th> Type</th>
+            <th> Adress</th>
+            <th> Build</th>
+            <th> Floors</th>
+            <th> Floor</th>
+            <th> Rooms</th>
+            <th> Price</th>
+            <th> Comment</th>
+            <th sec:authorize="hasAnyAuthority('ROLE_ADMIN')"> Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="apartment: ${apartments}">
+            <td th:text="${apartment.type}"></td>
+            <td th:text="${apartment.adress.street.streetName}"></td>
+            <td th:text="${apartment.adress.buildingNumber}"></td>
+            <td th:text="${apartment.adress.floorCount}"></td>
+            <td th:text="${apartment.floorNumber}"></td>
+            <td th:text="${apartment.roomCount}"></td>
+            <td th:text="${apartment.price}"></td>
+            <td th:text="${apartment.comment}"></td>
+            <td>
+                <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" th:href="@{/apartments/edit/{id}(id=${apartment.id})}"
+                   class="btn btn-primary">Update</a>
+
+                <a sec:authorize="hasAnyAuthority('ROLE_ADMIN')" th:href="@{/apartments/{id}(id=${apartment.id})}"
+                   class="btn btn-danger" onclick="return confirmation()">Delete</a>
+
+            </td>
+        </tr>
+        </tbody>
+        <tfoot class="table-dark">
+        <tr>
+            <th> Type</th>
+            <th> Adress</th>
+            <th> Build</th>
+            <th> Floors</th>
+            <th> Floor</th>
+            <th> Rooms</th>
+            <th> Price</th>
+            <th> Comment</th>
+            <th sec:authorize="hasAnyAuthority('ROLE_ADMIN')"> Actions</th>
+        </tr>
+        </tfoot>
+    </table>
+
+</div>
+</body>
+<script type="text/javascript">
+    // For confirm deleting
+    function confirmation() {
+        return confirm('Are you sure you want to do this?');
+    }
+    // For filtering Address
+    function tableSearch() {
+        var phrase = document.getElementById('search-text');
+
+        var table = document.getElementById('apartments');
+        var regPhrase = new RegExp(phrase.value, 'i');
+        var flag = false;
+        for (var i = 1; i < table.rows.length; i++) {
+            //!!!
+            //flag = false;
+            //for (var j = table.rows[i].cells.length - 1; j >= 0; j--) {
+            flag = regPhrase.test(table.rows[i].cells[1].innerHTML); //cells[j]
+            //if (flag) break;
+            //}
+            if (flag) {
+                table.rows[i].style.display = "";
+            } else {
+                table.rows[i].style.display = "none";
+            }
+
+        }
+    }
+
+    // For filtering rooms
+    function tableSearchRooms() {
+        var phrase = document.getElementById('search-text-room');
+
+        var table = document.getElementById('apartments');
+        var regPhrase = new RegExp(phrase.value, 'i');
+        var flag = false;
+        for (var i = 1; i < table.rows.length; i++) {
+            //!!!
+            //flag = false;
+            //for (var j = table.rows[i].cells.length - 1; j >= 0; j--) {
+            flag = regPhrase.test(table.rows[i].cells[5].innerHTML); //cells[j]
+            //if (flag) break;
+            //}
+            if (flag) {
+                table.rows[i].style.display = "";
+            } else {
+                table.rows[i].style.display = "none";
+            }
+
+        }
+    }
+</script>
+
+</html>

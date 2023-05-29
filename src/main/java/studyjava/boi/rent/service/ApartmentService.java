@@ -8,4 +8,9 @@ public interface ApartmentService  {
 
     List<Apartment> getAllApartment();
 
+    Apartment saveApartment(Apartment apartment);
+
+    Apartment getApartmentById(Long idApartment);
+
+    void deleteById(Long idApartment);
 }

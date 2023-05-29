@@ -4,10 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "adress")
+@Table(name = "adress", uniqueConstraints = @UniqueConstraint(columnNames = {"street_id", "building_number", "floor_count"}))
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -27,7 +26,16 @@ public class Adress {
     @Column(name = "floor_count", nullable = false)
     private int floorCount;
 
-
-
+    @Override
+    public String toString() {
+        String output = "";
+        if (street != null && !"Choose street".equals(street.getStreetName())) {
+            output = street.getStreetName() + ", " + buildingNumber +
+                    " (поверхів - " + floorCount + ')';
+        } else {
+            output = "Choose street";
+        }
+        return output;
+    }
 
 }

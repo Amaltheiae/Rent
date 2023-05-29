@@ -8,4 +8,8 @@ public interface AdressService {
 
     List<Adress> getAllAdress();
 
+    Adress saveAdress(Adress adress);
+
+    Adress findAdress(Adress adress);
+
 }

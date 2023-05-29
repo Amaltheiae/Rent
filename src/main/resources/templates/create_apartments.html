@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
-    <meta charset="ISO-8859-1">
-    <title>Rent System</title>
+    <meta charset="UTF-8">
+    <title>Spring2023</title>
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -11,7 +11,7 @@
 <body>
 <nav class="navbar navbar-expand-md bg-dark navbar-dark">
     <!-- Brand -->
-    <a class="navbar-brand" href="#">Rent System</a>
+    <a class="navbar-brand" href="#">Web page top</a>
 
     <!-- Toggler/collapsibe Button -->
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -22,7 +22,7 @@
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/apartment}">Rent System</a>
+                <a class="nav-link" th:href="@{/apartments}">Apartments List</a>
             </li>
         </ul>
     </div>
@@ -35,31 +35,45 @@
             <h1 class="text-center"> Add New Apartment </h1>
             <div class="card-body">
                 <form th:action="@{/apartments}" th:object="${apartment}" method="POST">
+                    <div class="col-lg-3">
+                        <a th:href="@{/add_adress}" class="btn btn-primary btn-sm mb-3"> Add Adress</a>
+                    </div>
                     <div class="form-group">
-                        <input required hidden type="text" name="id" th:field="*{id}"/>
+                        <label for="address">Adress:</label>
+                        <select class="custom-select" id="address"
+                                name="adress"
+                                th:field="*{adress}"
+                                >
+                            <option th:each="adr:${adresses}"
+                                    th:value="${adr.id}"
+                                    th:text="${adr.toString()}"
+                                    th:selected="${adr.id==apartment.adress.id}">
+                            </option>
+                        </select>
                     </div>
 
                     <div class="form-group">
                         <label>Apartment type:</label>
-                        <input checked="checked"
-                               type="radio"
-                               name="type_a"
-                               th:field="*{type}"
-                               th:value="FLAT"
-                        />FLAT
-                        <input checked="checked"
-                               type="radio"
-                               name="type_a"
-                               th:field="*{type}"
-                               th:value="ROOM"
-                        />ROOM
-                        <input checked="checked"
-                               type="radio"
-                               name="type_a"
-                               th:field="*{type}"
-                               th:value="HOUSE"
-                        />HOUSE</p>
+                        <select required
+                                th:field="*{type}">
+                            <option th:each="type : ${apartmentstypes}"
+                                    th:value="${type}"
+                                    th:text="${type}">
+                            </option>
+                        </select>
                     </div>
+
+
+                    <div class="form-group">
+                        <label>Room count:</label>
+                        <input required
+                               type="number"
+                               name="roomCount"
+                               th:field="*{roomCount}"
+                               min="1"
+                        />
+                    </div>
+
                     <div class="form-group">
                         <label>Floor number:</label>
                         <input required
@@ -67,11 +81,8 @@
                                name="floorNumber"
                                th:field="*{floorNumber}"
                                min="1"
-                               placeholder="Enter price"
-
                         />
                     </div>
-
 
                     <div class="form-group">
                         <label>Price:</label>
@@ -79,9 +90,18 @@
                                type="number"
                                name="price"
                                th:field="*{price}"
-                               min="1"
+                               min="1.0"
                                placeholder="Enter price"
                                title="Input price in hryvna"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Comments:</label>
+                        <input
+                                type="text"
+                                name="comments"
+                                th:field="*{comment}"
                         />
                     </div>
 
